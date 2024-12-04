@@ -188,26 +188,25 @@ const Game = {
                 Pong.running = true;
                 window.requestAnimationFrame(Pong.loop);
             }
-
           
-          if (mode === "Two Players (remote)" || mode === "One Player") {
-            switch (event.keyCode) {
-              case 83: // 'S' key
+          if (gameState.mode === "Two Players (remote)" || gameState.mode === "One Player") {
+            switch (event.key) {
+              case 's': // 'S' key
                 this.player.y += 10;
                 break;
-              case 40: // down key
+              case 'ArrowDown': // down key
                 this.player.y += 10;
                 break;
-              case 87: // 'W' key
+              case 'w': // 'W' key
                 this.player.y -= 10;
                 break;
-              case 38: // Up key
+              case 'ArrowUp': // Up key
                 this.player.y -= 10;
                 break;
             }
           }
           else {
-            switch (event.keyCode) {
+            switch (event.key) {
               case 40: // Down arrow
                 this.ai.y += 10;
                 break;
