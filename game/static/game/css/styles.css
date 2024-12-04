@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#game-instruction1 {
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 15px;
+    color: #000000;
+    margin-top: 20px;
+}
+
+#game-instruction2 {
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 15px;
+    color: #000000;
+    margin-top: 20px;
+}
+
+body {
+    text-align: center;
+    background-color: ghostwhite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden; /* Prevent scrollbars when the modal is shown */
+    flex-direction: column;
+    padding: 0;
+}
+
+canvas {
+    display: none;
+    border: 1px solid #ccc; /* Optional border for the game canvas */
+    margin: auto;
+    background-color: #f0f0f0; /* Light gray to see if canvas appears */
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+p {
+    margin-top: 10px;
+    color: grey;
+}
+
+/* Optional: Customize backdrop if needed */
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent backdrop */
+}
+
+/* Optional: Rounded corners for the modal content */
+.modal-content {
+    border-radius: 8px;
+}
+
+/* Optional: Limit the modal width */
+.modal-dialog {
+    max-width: 400px;
+}
+
+/* Optional: Customize the header and button styles */
+.modal-header h5 {
+    font-size: 1.5rem;
+    text-align: center;
+}
+.modal-body {
+    text-align: center;
+}
+
+/* Center buttons and make them full width */
+.modal-body .btn {
+    width: 100%;
+    margin-bottom: 10px;
+}

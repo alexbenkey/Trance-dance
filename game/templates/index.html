@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong Game</title>
+    <!-- Link Bootstrap toolkit -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
+    <!-- Link CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'game/css/styles.css' %}">
+</head>
+<body>
+    <h1>Pong Game</h1>
+    <canvas id="game" style="display:none;"></canvas>
+      <p id="game-instruction1">Press the UP and DOWN keys to move your paddle.</p>
+      <p id="game-instruction2">Left player: use the W/S keys to move. Right player: use UP/DOWN keys to move.</p>
+
+
+    <!-- Game Menu Modal -->
+    <div class="modal fade" id="gameMenu" tabindex="-1" aria-labelledby="gameMenuLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="gameMenuLabel">Select Game Mode</h5>
+                </div>
+                <div class="modal-body">
+                    <button id="onePlayerBtn" class="btn btn-outline-dark w-100 mb-2">One Player</button>
+                    <button id="twoPlayersBtn" class="btn btn-outline-dark w-100 mb-2">Two Players (hot seat)</button>
+                  <button id="twoPlayersRemoteBtn" class="btn btn-outline-dark w-100 mb-2">Two Players (remote)</button>
+                    <button id="tournamentBtn" class="btn btn-outline-dark w-100">Tournament</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <!-- Link JS -->
+    <script src="{% static 'game/js/script.js' %}"></script>
+</body>
+</html>
