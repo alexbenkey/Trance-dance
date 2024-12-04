@@ -12,4 +12,15 @@ class Game:
         # bounce logic
         if self.ball["y"] <= 0 or self.ball["y"] >= self.canvas["height"]:
             self.ball["velocityY"] *= 1
-            
+        
+        # add some other logic stuff with colision
+
+
+
+    def update_paddle(self, paddle, direction):
+        speed = 7
+        # add the rest, i think this just isn't precise enough
+
+
+
+# INCOMPLETE
