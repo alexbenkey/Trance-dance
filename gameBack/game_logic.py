@@ -1,26 +1,105 @@
+# game_logic.py
+# Backend logic for handling game state, including ball and paddle movements
+
+import json
+
 class Game:
-    def __init__(self):
-        self.ball = {"x": 700, "y": 500, "velocityX": 5, "velocityY": 5}
-        self.player = {"y": 400, "score": 0}
-        self.ai = {"y": 400, "score": 0}
-        self.canvas = {"width": 1400, "height": 1000}
-    
-    def update_ball(self):
-        self.ball["x"] += self.ball["velocityX"]
-        self.ball["y"] += self.ball["velocityY"]
+    def __init__(self, mode):
+        self.mode = mode
+        self.player = {"x": 10, "y": 200, "width": 10, "height": 100}
+        self.opponent = {"x": 780, "y": 200, "width": 10, "height": 100}
+        self.ball = {"x": 400, "y": 300, "radius": 10, "vx": 4, "vy": 3}
+        self.score = {"player": 0, "opponent": 0}
+        self.running = True
 
-        # bounce logic
-        if self.ball["y"] <= 0 or self.ball["y"] >= self.canvas["height"]:
-            self.ball["velocityY"] *= 1
-        
-        # add some other logic stuff with colision
+    def update_state(self):
+        # Update ball position
+        self.ball["x"] += self.ball["vx"]
+        self.ball["y"] += self.ball["vy"]
 
+        # Ball collision with top/bottom walls
+        if self.ball["y"] - self.ball["radius"] <= 0 or self.ball["y"] + self.ball["radius"] >= 600:
+            self.ball["vy"] *= -1
 
+        # Ball collision with paddles
+        if self._check_collision(self.player):
+            self.ball["vx"] = abs(self.ball["vx"])
+        if self._check_collision(self.opponent):
+            self.ball["vx"] = -abs(self.ball["vx"])
 
-    def update_paddle(self, paddle, direction):
-        speed = 7
-        # add the rest, i think this just isn't precise enough
+        # Ball out of bounds
+        if self.ball["x"] < 0:
+            self.score["opponent"] += 1
+            self._reset_ball(direction=1)
+        elif self.ball["x"] > 800:
+            self.score["player"] += 1
+            self._reset_ball(direction=-1)
 
+        # Opponent AI movement (only in single-player mode)
+        if self.mode == "One Player":
+            self._move_ai()
 
+    def move_player(self, player_id, direction):
+        paddle = self.player if player_id == "player" else self.opponent
+        if direction == "up" and paddle["y"] > 0:
+            paddle["y"] -= 10
+        elif direction == "down" and paddle["y"] + paddle["height"] < 600:
+            paddle["y"] += 10
 
-# INCOMPLETE
+    def get_state(self):
+        return {
+            "player": self.player,
+            "opponent": self.opponent,
+            "ball": self.ball,
+            "score": self.score
+        }
+
+    def _check_collision(self, paddle):
+        return (
+            self.ball["x"] - self.ball["radius"] <= paddle["x"] + paddle["width"]
+            and self.ball["x"] + self.ball["radius"] >= paddle["x"]
+            and self.ball["y"] >= paddle["y"]
+            and self.ball["y"] <= paddle["y"] + paddle["height"]
+        )
+
+    def _reset_ball(self, direction):
+        self.ball["x"] = 400
+        self.ball["y"] = 300
+        self.ball["vx"] = direction * 4
+        self.ball["vy"] = 3
+
+    def _move_ai(self):
+        if self.ball["y"] < self.opponent["y"] + self.opponent["height"] // 2:
+            self.opponent["y"] -= 5
+        elif self.ball["y"] > self.opponent["y"] + self.opponent["height"] // 2:
+            self.opponent["y"] += 5
+
+# Example of game loop for WebSocket server
+
+def handle_message(game, message):
+    data = json.loads(message)
+
+    if data["action"] == "move":
+        game.move_player(data["player"], data["direction"])
+    elif data["action"] == "update":
+        game.update_state()
+        return game.get_state()
+    elif data["action"] == "stop":
+        game.running = False
+
+# Example WebSocket communication (implementation depends on the WebSocket library)
+
+def websocket_game_handler(socket, mode):
+    game = Game(mode)
+
+    while game.running:
+        # Receive message from client
+        message = socket.receive()
+        response = handle_message(game, message)
+
+        if response:
+            # Send updated game state to clients
+            socket.send(json.dumps({"type": "update", "data": response}))
+
+    # Notify clients the game is over
+    socket.send(json.dumps({"type": "end", "reason": "Game stopped by player."}))

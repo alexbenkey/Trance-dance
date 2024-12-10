@@ -360,3 +360,258 @@ const Game = {
 
 
 const Pong = Object.assign({}, Game);
+
+
+
+
+
+
+
+// UPDATES __ VERSION 5 (TO REVIEW)
+// DOM Elements
+const startModal = document.getElementById('start-modal');
+const gameModeButtons = document.querySelectorAll('.game-mode-btn');
+const overlay = document.getElementById('overlay');
+const messageBox = document.getElementById('message-box');
+
+// Game State Variables
+let gameState = {
+    players: {
+        player1: { y_position: 300, score: 0 },
+        player2: { y_position: 300, score: 0 }
+    },
+    ball: { x_position: 400, y_position: 300, velocity_x: 0, velocity_y: 0 },
+    game: { status: 'waiting', turn: null }
+};
+let gameMode = null; // 'single', 'multi', 'tournament'
+let ws = null; // websockets
+
+// Event Listeners
+gameModeButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        gameMode = button.getAttribute('data-mode'); // e.g., 'single', 'multi', 'tournament'
+        setupGameMode(gameMode);
+    });
+});
+
+// WebSocket Handlers
+function setupWebSocket() {
+    ws = new WebSocket('ws://localhost:8080');
+    ws.onopen = () => console.log('WebSocket connected');
+    ws.onmessage = event => handleServerMessage(JSON.parse(event.data));
+    ws.onclose = () => console.log('WebSocket disconnected');
+}
+
+// Handling Server Messages
+function handleServerMessage(message) {
+    switch (message.type) {
+        case 'game_update':
+            updateGameState(message.payload);
+            break;
+        case 'waiting_opponent':
+            showOverlay('Waiting for opponent...');
+            break;
+        case 'start_game':
+            hideOverlay();
+            break;
+        case 'game_over':
+            showOverlay(`Game Over! Winner: ${message.payload.winner}`);
+            break;
+        default:
+            console.error('Unknown message type:', message.type);
+    }
+}
+
+// Game State Management
+function updateGameState(newState) {
+    gameState = newState;
+    renderGameState();
+}
+
+// Game Rendering
+function renderGameState() {
+    // Update player positions
+    document.getElementById('player1-paddle').style.top = `${gameState.players.player1.y_position}px`;
+    document.getElementById('player2-paddle').style.top = `${gameState.players.player2.y_position}px`;
+
+    // Update ball position
+    const ballElement = document.getElementById('ball');
+    ballElement.style.left = `${gameState.ball.x_position}px`;
+    ballElement.style.top = `${gameState.ball.y_position}px`;
+
+    // Update scores
+    document.getElementById('player1-score').innerText = gameState.players.player1.score;
+    document.getElementById('player2-score').innerText = gameState.players.player2.score;
+}
+
+// UI Management
+function setupGameMode(mode) {
+    startModal.style.display = 'none'; // Hide the modal
+    if (mode === 'multi') {
+        showOverlay('Connecting to server...');
+        setupWebSocket();
+    } else {
+        startGame(); // For single or tournament modes
+    }
+}
+
+function showOverlay(message) {
+    messageBox.innerText = message;
+    overlay.style.display = 'flex';
+}
+
+function hideOverlay() {
+    overlay.style.display = 'none';
+}
+
+function startGame() {
+    hideOverlay();
+    gameState.game.status = 'running';
+    // Add any additional initialization here
+    console.log('Game started in mode:', gameMode);
+}
+
+// Input Handling
+document.addEventListener('keydown', event => {
+    if (gameState.game.status !== 'running') return;
+    const player = gameMode === 'multi' ? 'player1' : 'player2';
+    if (event.key === 'ArrowUp') movePlayer(player, -10);
+    if (event.key === 'ArrowDown') movePlayer(player, 10);
+});
+
+function movePlayer(player, deltaY) {
+    gameState.players[player].y_position += deltaY;
+    if (gameMode === 'multi') {
+        ws.send(JSON.stringify({
+            type: 'player_move',
+            payload: { player_id: player, y_position: gameState.players[player].y_position }
+        }));
+    }
+    renderGameState();
+}
+
+// Initialization
+startModal.style.display = 'block';
+
+
+
+
+
+
+
+// OTHER VERSION WITH REFINEMENTS
+// Simplified game.js for frontend logic with server integration
+
+const gameMenuElement = document.getElementById("gameMenu");
+const instructions1 = document.getElementById("game-instruction1");
+const instructions2 = document.getElementById("game-instruction2");
+const gameCanvas = document.getElementById("game");
+const gameContext = gameCanvas.getContext("2d");
+
+instructions1.style.display = "none";
+instructions2.style.display = "none";
+
+const gameMenu = new bootstrap.Modal(gameMenuElement, {
+    backdrop: "static",
+    keyboard: false,
+});
+
+const gameState = {
+    mode: null,
+    running: false,
+    playerId: null, // Assigned by the server
+};
+
+// Handle starting the game based on the selected mode
+function startGame(mode) {
+    gameState.mode = mode;
+    gameState.running = true;
+
+    console.log(`Game started in ${mode} mode.`);
+    gameMenu.hide();
+
+    gameCanvas.style.display = "block";
+
+    if (mode === "One Player" || mode === "Two Players (hot seat)") {
+        alert(`${mode} mode will use backend logic. Initializing connection...`);
+        initializeGameConnection();
+    } else {
+        alert(`${mode} mode is not yet implemented.`);
+    }
+}
+
+// Event listeners for menu buttons
+document.getElementById("onePlayerBtn").addEventListener("click", () => startGame("One Player"));
+document.getElementById("twoPlayersBtn").addEventListener("click", () => startGame("Two Players (hot seat)"));
+document.getElementById("twoPlayersRemoteBtn").addEventListener("click", () => startGame("Two Players (remote)"));
+document.getElementById("tournamentBtn").addEventListener("click", () => startGame("Tournament"));
+
+// Show the menu on page load
+window.onload = () => {
+    gameMenu.show();
+};
+
+// Placeholder for initializing server communication
+function initializeGameConnection() {
+    const serverUrl = "ws://your-server-address/game";
+    const socket = new WebSocket(serverUrl);
+
+    socket.onopen = () => {
+        console.log("Connected to the game server.");
+        // Inform server about the game mode
+        socket.send(JSON.stringify({ action: "start", mode: gameState.mode }));
+    };
+
+    socket.onmessage = (event) => {
+        const serverMessage = JSON.parse(event.data);
+        handleServerMessage(serverMessage);
+    };
+
+    socket.onclose = () => {
+        console.log("Disconnected from the game server.");
+        gameState.running = false;
+    };
+
+    socket.onerror = (error) => {
+        console.error("WebSocket error:", error);
+        alert("An error occurred with the game server connection.");
+    };
+
+    gameState.socket = socket;
+}
+
+// Handle messages from the server
+function handleServerMessage(message) {
+    switch (message.type) {
+        case "update":
+            // Update game state based on server data
+            updateGameState(message.data);
+            break;
+        case "end":
+            alert(`Game over: ${message.reason}`);
+            gameState.running = false;
+            break;
+        default:
+            console.warn("Unknown message type:", message.type);
+    }
+}
+
+// Update game state and redraw the canvas based on server updates
+function updateGameState(data) {
+    const { player, opponent, ball } = data;
+
+    // Clear the canvas
+    gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+
+    // Draw paddles
+    gameContext.fillStyle = "white";
+    gameContext.fillRect(player.x, player.y, player.width, player.height);
+    gameContext.fillRect(opponent.x, opponent.y, opponent.width, opponent.height);
+
+    // Draw ball
+    gameContext.beginPath();
+    gameContext.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+    gameContext.fill();
+}
+
+// Local game logic has been removed in favor of backend integration
