@@ -37,7 +37,7 @@ function sendPlayerAction(action, data) {
 function handleServerMessage(message) {
     switch (message.type) {
         case "update":
-            updateGameCanvas(message.data); // Function to update canvas
+            updateGameCanvas(message.data);
             break;
         case "end":
             alert(`Game Over: ${message.reason}`);
@@ -47,7 +47,7 @@ function handleServerMessage(message) {
     }
 }
 
-// Example to send paddle movement to the server
+// paddle movement to the server
 document.addEventListener("keydown", (event) => {
     if (event.key === "ArrowUp") {
         sendPlayerAction("move", { direction: "up" });
@@ -60,7 +60,7 @@ document.addEventListener("keydown", (event) => {
     }
 });
 
-// Call this function to initiate WebSocket connection
+//initiate WebSocket connection
 connectWebSocket();
 
 

@@ -1,4 +1,4 @@
-# # to check
+#
 
 # import asyncio
 # import json
@@ -38,14 +38,13 @@ import json
 import websockets
 from game_logic import Game
 
-# Dictionary to keep track of active games (keyed by game_id)
+#active games by game_id 
 games = {}
 players = {}
 
 async def handle_connection(websocket, path):
     try:
-        # Assign a unique player ID
-        player_id = id(websocket)
+        player_id = id(websocket) # assigns a unique player ID
         players[player_id] = websocket
         print(f"Player {player_id} connected.")
 
@@ -66,8 +65,7 @@ async def handle_connection(websocket, path):
                 if game_id in games:
                     game = games[game_id]
                     game.move_player(player_id, direction)
-                    # Update all connected players
-                    await broadcast_game_state(game_id)
+                    await broadcast_game_state(game_id)  # updates all connected players
 
             elif action == "disconnect":
                 del players[player_id]
@@ -82,7 +80,6 @@ async def broadcast_game_state(game_id):
     if game_id in games:
         game_state = games[game_id].get_state()
         message = json.dumps({"type": "update", "data": game_state})
-        # Broadcast state to all players in the game
         for player in players.values():
             await player.send(message)
 

@@ -74,8 +74,7 @@ class Game:
         elif self.ball["y"] > self.opponent["y"] + self.opponent["height"] // 2:
             self.opponent["y"] += 5
 
-# Example of game loop for WebSocket server
-
+#ex.game loop for WebSocket server
 def handle_message(game, message):
     data = json.loads(message)
 
@@ -87,19 +86,16 @@ def handle_message(game, message):
     elif data["action"] == "stop":
         game.running = False
 
-# Example WebSocket communication (implementation depends on the WebSocket library)
-
+# ex.WebSocket communication (implementation depends on the WebSocket library)
 def websocket_game_handler(socket, mode):
     game = Game(mode)
 
     while game.running:
-        # Receive message from client
-        message = socket.receive()
+        message = socket.receive() # from client
         response = handle_message(game, message)
 
         if response:
-            # Send updated game state to clients
-            socket.send(json.dumps({"type": "update", "data": response}))
+            socket.send(json.dumps({"type": "update", "data": response})) # to client
 
-    # Notify clients the game is over
+    # updates client of game over
     socket.send(json.dumps({"type": "end", "reason": "Game stopped by player."}))
