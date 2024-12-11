@@ -1,6 +1,6 @@
 // const wsHandler = new WebSocketHandler("ws://localhost:8000/ws/game/");
-const serverUrl = "ws://localhost:8000/ws/game/";
 // const serverUrl = "ws://your-server-address/game"; // replace with server URL
+const serverUrl = "ws://localhost:8000/ws/game/";
 let socket;
 
 function connectWebSocket() {
@@ -53,6 +53,10 @@ document.addEventListener("keydown", (event) => {
         sendPlayerAction("move", { direction: "up" });
     } else if (event.key === "ArrowDown") {
         sendPlayerAction("move", { direction: "down" });
+    } else if (event.key === "s") { // needed??
+        sendPlayerAction("move", { direction: "down" });
+    } else if (event.key === "w") { // needed??
+        sendPlayerAction("move", { direction: "up" });
     }
 });
 

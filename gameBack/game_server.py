@@ -55,9 +55,9 @@ async def handle_connection(websocket, path):
             game_id = data.get("game_id")
 
             if action == "start":
-                # Create a new game instance
+                # new game instance
                 mode = data.get("mode")
-                game_id = f"game_{player_id}"  # Example game ID
+                game_id = f"game_{player_id}"  # game ID??
                 games[game_id] = Game(mode)
                 await websocket.send(json.dumps({"type": "started", "game_id": game_id}))
 

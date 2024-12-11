@@ -8,24 +8,24 @@ class Game:
         self.mode = mode
         self.player = {"x": 10, "y": 200, "width": 10, "height": 100}
         self.opponent = {"x": 780, "y": 200, "width": 10, "height": 100}
-        self.ball = {"x": 400, "y": 300, "radius": 10, "vx": 4, "vy": 3}
+        self.ball = {"x": 400, "y": 300, "radius": 10, "dir_x": 4, "dir_y": 3}
         self.score = {"player": 0, "opponent": 0}
         self.running = True
 
     def update_state(self):
         # Update ball position
-        self.ball["x"] += self.ball["vx"]
-        self.ball["y"] += self.ball["vy"]
+        self.ball["x"] += self.ball["dir_x"]
+        self.ball["y"] += self.ball["dir_y"]
 
         # Ball collision with top/bottom walls
         if self.ball["y"] - self.ball["radius"] <= 0 or self.ball["y"] + self.ball["radius"] >= 600:
-            self.ball["vy"] *= -1
+            self.ball["dir_y"] *= -1
 
         # Ball collision with paddles
         if self._check_collision(self.player):
-            self.ball["vx"] = abs(self.ball["vx"])
+            self.ball["dir_x"] = abs(self.ball["dir_x"])
         if self._check_collision(self.opponent):
-            self.ball["vx"] = -abs(self.ball["vx"])
+            self.ball["dir_x"] = -abs(self.ball["dir_x"])
 
         # Ball out of bounds
         if self.ball["x"] < 0:
@@ -65,8 +65,8 @@ class Game:
     def _reset_ball(self, direction):
         self.ball["x"] = 400
         self.ball["y"] = 300
-        self.ball["vx"] = direction * 4
-        self.ball["vy"] = 3
+        self.ball["dir_x"] = direction * 4
+        self.ball["dir_y"] = 3
 
     def _move_ai(self):
         if self.ball["y"] < self.opponent["y"] + self.opponent["height"] // 2:
