@@ -62,7 +62,7 @@ window.onload = () => {
 // placeholder for initializing server communication
 function initializeGameConnection() {
     // const serverUrl = "ws://your-server-address/game";
-    const serverUrl = "ws://localhost:8000"; // not 8765
+    const serverUrl = "wss://localhost:8000/"; // not 8765
     const socket = new WebSocket(serverUrl);
 
     socket.onopen = () => {
@@ -83,7 +83,7 @@ function initializeGameConnection() {
 
     socket.onerror = (error) => {
         console.error("WebSocket error:", error);
-        alert("An error occurred with the game server connection.");
+        alert("An error occurred with the game server connection."); // errors here
     };
 
     gameState.socket = socket;

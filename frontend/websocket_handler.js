@@ -1,6 +1,6 @@
 // const wsHandler = new WebSocketHandler("ws://localhost:8000/ws/game/");
 // const serverUrl = "ws://your-server-address/game"; // replace with server URL
-const serverUrl = "ws://localhost:8000"; // not 8765
+const serverUrl = "wss://localhost:8000/"; // not 8765
 
 let socket;
 

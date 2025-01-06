@@ -64,6 +64,14 @@ MIDDLEWARE = [
 
 ]
 
+SECURE_SSL_REDIRECT = True # redirects none HTTPS to HTTPS
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
 # governs whether your server accepts requests from different origins (domains, subdomains, or ports)
 # allows your backend to accept cross-origin requests from specific frontends. (browser thingys, not the server)
 CORS_ALLOWED_ORIGINS = [
