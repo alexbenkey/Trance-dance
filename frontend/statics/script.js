@@ -62,7 +62,8 @@ window.onload = () => {
 // placeholder for initializing server communication
 function initializeGameConnection() {
     // const serverUrl = "ws://your-server-address/game";
-    const serverUrl = "wss://localhost:8000/"; // not 8765
+    //const serverUrl = "ws://localhost:8000/";
+    const serverUrl = "wss://localhost:8000/ws/game/";
     const socket = new WebSocket(serverUrl);
 
     socket.onopen = () => {

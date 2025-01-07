@@ -16,13 +16,14 @@ from game_server.websocket_client import GameConsumer
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 
-application = get_asgi_application()
+#application = get_asgi_application()
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": AuthMiddlewareStack(
         URLRouter({
-            "game_server/": GameConsumer.as_asgi(),
+            #"game_server/": GameConsumer.as_asgi(),
+            "ws/game/": GameConsumer.as_asgi(),
         })
     ),
 })

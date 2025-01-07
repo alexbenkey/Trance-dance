@@ -72,11 +72,17 @@ SECURE_HSTS_PRELOAD = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://localhost'] # add something extra is we have a proper domain name, like: 'https://your-domain.com', 
+
 # governs whether your server accepts requests from different origins (domains, subdomains, or ports)
 # allows your backend to accept cross-origin requests from specific frontends. (browser thingys, not the server)
 CORS_ALLOWED_ORIGINS = [
     "http://frontend:8080",
     "http://localhost:8080",  # for local development, later change it
+    "https://frontend:8080",
+    "https://localhost:8080",  # for local development, later change it
 ]
 
 REST_FRAMEWORK = {
@@ -106,6 +112,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 ASGI_APPLICATION = "backend.asgi.application"
 
+# Add Redis for Channels (if required)
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',  # Use Redis in production
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

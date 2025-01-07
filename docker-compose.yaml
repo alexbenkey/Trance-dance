@@ -59,7 +59,8 @@ services:
             - "8000:8000"
         networks:
             - transcendence
-        command: python3 ./backend/game_server/game_server.py
+        #command: python3 ./backend/game_server/game_server.py -- OLD VERSION, PUT BACK IF NEEDED
+        command: python3 manage.py runserver 0.0.0.0:8000
         restart: on-failure
 
     # websocket_server:
@@ -80,8 +81,8 @@ services:
         volumes:
             - ./frontend/statics/:/usr/share/nginx/html/static/
         ports:
-            - "8080:80"
-            #- 443:443
+            - "80:80"
+            - "443:443"
         networks:
             - transcendence
         depends_on:
