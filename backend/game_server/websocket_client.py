@@ -1,6 +1,6 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from game_logic import Game
+from backend.game_server.game_logic import Game
 
 games = {}  # active games by game_id -- laura??
 players = {}  # active players by player_id -- laura??
