@@ -29,7 +29,8 @@ DEBUG = True
 
 # Controls which hostnames can make requests to your Django server.
 # ensures only recognized hosts can serve your app
-ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'localhost,localhost']
 
 
 # Application definition
@@ -72,8 +73,9 @@ SECURE_HSTS_PRELOAD = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
+USE_X_FORWARDED_HOST = True
+
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['https://localhost'] # add something extra is we have a proper domain name, like: 'https://your-domain.com', 
 
 # governs whether your server accepts requests from different origins (domains, subdomains, or ports)

@@ -1,7 +1,12 @@
 // const wsHandler = new WebSocketHandler("ws://localhost:8000/ws/game/");
 // const serverUrl = "ws://your-server-address/game"; // replace with server URL
 // const serverUrl = "ws://localhost:8000/"; 
-const serverUrl = "wss://localhost:8000/ws/game/";
+
+// const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+// const serverUrl = `${wsScheme}://${window.location.host}/ws/game/`;
+
+//const serverUrl = "wss://localhost:8000/ws/game_server/";
+const serverUrl = "ws://localhost:8000/ws/game_server/";
 
 let socket;
 
@@ -25,6 +30,7 @@ function connectWebSocket() {
 
     socket.onerror = (error) => {
         console.error("WebSocket error:", error);
+        alert(`WebSocket error: ${error.message}`);  // More detailed error message
     };
 }
 

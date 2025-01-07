@@ -59,8 +59,10 @@ services:
             - "8000:8000"
         networks:
             - transcendence
-        #command: python3 ./backend/game_server/game_server.py -- OLD VERSION, PUT BACK IF NEEDED
-        command: python3 manage.py runserver 0.0.0.0:8000
+        command: python3 ./backend/game_server/game_server.py -- OLD VERSION, PUT BACK IF NEEDED
+        #command: daphne backend.backend.asgi:application
+        environment:
+            - DJANGO_SETTINGS_MODULE=backend.settings
         restart: on-failure
 
     # websocket_server:
@@ -81,12 +83,12 @@ services:
         volumes:
             - ./frontend/statics/:/usr/share/nginx/html/static/
         ports:
-            - "80:80"
+            - "8080:80"
             - "443:443"
         networks:
             - transcendence
         depends_on:
-        - backend
+            - backend
 
 networks:
   transcendence:

@@ -19,7 +19,7 @@
 
 
     <!-- Game Menu Modal -->
-    <div class="modal fade" id="gameMenu" tabindex="-1" aria-labelledby="gameMenuLabel" aria-hidden="true">
+    <div class="modal fade" id="gameMenu" tabindex="-1" aria-labelledby="gameMenuLabel" aria-hidden="true" inert>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -36,7 +36,9 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-    <!-- Link JS -->
+    <!-- Link WebSocket Handler Script -->
+    <script src="{% static 'game/js/websocket_handler.js' %}"></script>  <!-- Include websocket_handler.js -->
+    <!-- Link Main Game Script -->
     <script src="{% static 'game/js/script.js' %}"></script>
 </body>
 </html>
