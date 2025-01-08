@@ -1,3 +1,5 @@
+import { handleServerMessage } from "./statics/script.js";
+
 const serverUrl = "ws://localhost:8000/ws/game_server/";
 
 let socket;
@@ -45,7 +47,7 @@ function sendPlayerAction(action, data) {
 function handleServerMessage(message) {
     switch (message.type) {
         case "update":
-            updateGameCanvas(message.data);
+            updateGameState(message.data);
             break;
         case "end":
             alert(`Game Over: ${message.reason}`);
@@ -55,18 +57,4 @@ function handleServerMessage(message) {
     }
 }
 
-// paddle movement to the server
-document.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowUp") {
-        sendPlayerAction("move", { direction: "up" });
-    } else if (event.key === "ArrowDown") {
-        sendPlayerAction("move", { direction: "down" });
-    } else if (event.key === "s") { // needed??
-        sendPlayerAction("move", { direction: "down" });
-    } else if (event.key === "w") { // needed??
-        sendPlayerAction("move", { direction: "up" });
-    }
-});
-
-//initiate WebSocket connection
-export {connectWebSocket, sendPlayerAction};
+export { connectWebSocket, sendPlayerAction };

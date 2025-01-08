@@ -129,8 +129,20 @@ function updateGameState(data) {
     gameContext.fill();
 }
 
+// paddle movement to the server
+document.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowUp") {
+        sendPlayerAction("move", { direction: "up" });
+    } else if (event.key === "ArrowDown") {
+        sendPlayerAction("move", { direction: "down" });
+    } else if (event.key === "s") { // needed??
+        sendPlayerAction("move", { direction: "down" });
+    } else if (event.key === "w") { // needed??
+        sendPlayerAction("move", { direction: "up" });
+    }
+});
 
-
+export { updateGameState };
 
 
 // VERSION 4 -- GAME
