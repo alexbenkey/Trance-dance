@@ -84,7 +84,7 @@ services:
             - ./frontend/statics/:/usr/share/nginx/html/static/
         ports:
             - "8080:80"
-            - "443:443"
+            - "8443:443"
         networks:
             - transcendence
         depends_on:
